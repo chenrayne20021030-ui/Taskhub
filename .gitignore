@@ -1,0 +1,27 @@
+# OS / editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.orig
+
+# Personal Taskhub data / backups
+taskhub-backup*.json
+Taskhub_Backup*.json
+*.personal.xlsx
+
+# Archives and local test artifacts
+*.zip
+*.crx
+*.pem
+*.key
+.env
+.env.*

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="#f4f6f6" name="theme-color"/>
+<title>taskhub · My Tasks</title>
+<link href="app.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="app-shell">
+<aside class="left-sidebar">
+<div class="brand"><div class="brand-mark">✦</div><h1>taskhub</h1></div>
+<div class="workspace-switch"><span class="workspace-icon">✿</span><span data-i18n="Personal Workspace">个人工作区</span><span class="chevron">⌄</span></div>
+<nav class="nav">
+<button class="nav-link" id="homeNav"><span class="nav-icon">⌂</span>首页</button>
+<button class="nav-link active" id="myTasksNav"><span class="nav-icon">◉</span>我的任务</button>
+<button class="nav-link" id="listNav"><span class="nav-icon">▤</span>任务列表</button>
+<button class="nav-link" id="categoriesNav"><span class="nav-icon">▦</span>分类管理</button>
+</nav>
+<hr class="side-divider"/>
+<div class="project-head"><span data-i18n="PROJECTS">任务分类</span><button class="add-project" data-i18n-title="添加分类" id="addCategory" title="添加分类">＋</button></div>
+<div class="category-list" id="categoryList"></div>
+<div class="sidebar-footer">Your plans, all in one place.<br/>Make every day count.</div>
+</aside>
+<main class="main-area">
+<header class="main-header">
+<div class="page-title"><h2 data-i18n="My Tasks">我的任务</h2><p data-i18n="Monitor all of your tasks here">在这里管理全部日程</p></div>
+<div class="header-actions">
+<div aria-label="Interface language" class="language-switch" role="group"><button class="lang-btn active" data-lang="zh" type="button">中文</button><button class="lang-btn" data-lang="en" type="button">EN</button></div><label class="search-box"><span>⌕</span><input data-i18n-placeholder="Search tasks..." id="searchTasks" placeholder="搜索任务..." type="search"/></label>
+<button class="header-icon" data-i18n-title="管理分类" id="manageCatsTop" title="管理分类">⚙</button>
+<button class="header-icon" data-i18n-title="使用说明" id="helpButton" title="使用说明">?</button>
+<div class="avatar">ME</div>
+<button class="btn compact-action view-entry" id="openSidebarButton" type="button" title="在 Edge 侧边栏打开"><span class="action-symbol">◧</span><span data-i18n="侧边栏">侧边栏</span></button>
+<button class="btn compact-action view-entry" id="openWindowButton" type="button" title="在独立窗口打开"><span class="action-symbol">▢</span><span data-i18n="独立窗口">独立窗口</span></button>
+<button class="btn compact-action reminder-action" id="reminderTop" type="button" title="提醒设置"><span class="action-symbol">♧</span><span data-i18n="提醒">提醒</span></button>
+<button class="btn compact-action" id="excelImportTop" type="button"><span class="action-symbol">⇧</span><span data-i18n="Excel 导入">Excel 导入</span></button>
+<button class="btn primary" data-i18n="＋ New" id="addTaskTop">＋ 新建</button>
+</div>
+</header>
+<section class="summary-strip">
+<div class="summary-card"><div class="summary-icon">▤</div><div class="summary-copy"><strong id="totalTasks">0</strong><span data-i18n="本月任务">本月任务</span></div></div>
+<div class="summary-card"><div class="summary-icon">✓</div><div class="summary-copy"><strong id="doneTasks">0</strong><span data-i18n="已完成">已完成</span></div></div>
+<div class="summary-card"><div class="summary-icon">◷</div><div class="summary-copy"><strong id="pendingTasks">0</strong><span data-i18n="待完成任务数">待完成任务数</span></div></div>
+</section>
+<section class="content-panel">
+<div class="view-toolbar">
+<div class="view-tabs">
+<button class="view-tab" data-i18n="List" data-view="list">列表</button>
+<button class="view-tab active" data-i18n="Calendar" data-view="calendar">日历</button>
+</div>
+<div class="calendar-tools">
+<button aria-label="上个月" class="icon-btn" id="prevMonth">‹</button>
+<button class="btn today-btn" data-i18n="Today" id="goToday">今天</button>
+<span class="month-label" id="overviewMonth">NOV 2026</span>
+<button aria-label="下个月" class="icon-btn" id="nextMonth">›</button>
+<button class="btn" id="filterButton">Filter: All</button><button class="btn" data-i18n="⚙ Settings" data-i18n-title="数据与设置" id="settingsButton" title="数据与设置">⚙ 设置</button>
+</div>
+</div>
+<section class="calendar-panel" id="calendarView">
+<div class="calendar-head"><div class="month-title"><h2 id="monthTitle">NOVEMBER 2026</h2><span data-i18n="Your monthly overview" id="monthSubtitle">本月日程概览</span></div><div class="month-controls"><span class="helper" data-i18n="点击任务色条可编辑">点击日程可编辑 · 点击日期可新增</span></div></div>
+<div class="weekday-row"><div data-i18n="Sun">周日</div><div data-i18n="Mon">周一</div><div data-i18n="Tue">周二</div><div data-i18n="Wed">周三</div><div data-i18n="Thu">周四</div><div data-i18n="Fri">周五</div><div data-i18n="Sat">周六</div></div>
+<div id="calendar"></div>
+<div class="empty-hint" data-i18n="还没有任务，点击右上角「＋ New」开始安排。" hidden="" id="calendarHint">暂无任务，点击任意日期快速添加。</div>
+<div class="calendar-foot"><span data-i18n="任务色条会按日期区间自动延展">日程色条会按照日期区间自动延展</span><div class="calendar-legend" id="calendarLegend"></div></div>
+</section>
+<section class="list-view" hidden="" id="listView">
+<div class="list-head"><h3><span data-i18n="Task list">任务列表</span><small id="taskCountLabel" style="color:#9aa5a9;font-size:10px;font-weight:500">0 项</small></h3><div class="filters" id="taskFilters"><button class="filter-chip active" data-filter="all" data-i18n="全部">全部</button><button class="filter-chip" data-filter="pending" data-i18n="待完成">待完成</button><button class="filter-chip" data-filter="done" data-i18n="已完成">已完成</button><button class="filter-chip" data-filter="missed" data-i18n="未完成">未完成</button></div></div>
+<div class="task-list" id="taskList"></div>
+</section>
+</section>
+</main>
+</div>
+<button aria-label="新建任务" class="mobile-add" id="mobileAdd">＋</button>
+<div class="modal-backdrop" id="taskModalBackdrop">
+<div aria-labelledby="taskModalTitle" aria-modal="true" class="modal" role="dialog">
+<div class="modal-head"><h3 data-i18n="新建任务" id="taskModalTitle">新建任务</h3><button class="close-btn" data-close="taskModalBackdrop">×</button></div>
+<form id="taskForm">
+<div class="field"><label data-i18n="任务名称" for="taskTitle">任务名称</label><input data-i18n-placeholder="例如：完成文献综述初稿" id="taskTitle" maxlength="100" placeholder="例如：完成文献综述初稿" required=""/></div>
+<div class="date-grid"><div class="field"><label data-i18n="开始日期" for="taskStart">开始日期</label><input id="taskStart" required="" type="date"/></div><div class="field"><label id="taskEndLabel" for="taskEnd">结束日期</label><input id="taskEnd" required="" type="date"/></div></div>
+<div class="field"><label data-i18n="任务分类" for="taskCategory">任务分类</label><select id="taskCategory"></select></div>
+<div class="completion-row important-row"><div><strong data-i18n="⭐ 重要任务">⭐ 重要任务</strong><span data-i18n="重要任务提示">为这项日程添加星标，日历、任务列表和侧边栏都会显示。</span></div><label class="switch"><input id="taskImportant" role="switch" type="checkbox" aria-label="标记为重要任务"/><span class="switch-slider"></span></label></div>
+<div class="completion-row repeat-switch-row" id="repeatTaskSwitchRow"><div><strong data-i18n="设置为重复日程">设置为重复日程</strong><span data-i18n="开启后可设置每天、每周或每月的重复规则">开启后可设置每天、每周或每月的重复规则</span></div><label class="switch"><input id="taskRepeatToggle" role="switch" type="checkbox" aria-label="设置为重复日程"/><span class="switch-slider"></span></label></div>
+<div class="repeat-options" id="taskRepeatOptions" hidden>
+<div class="repeat-rule-grid"><div class="field"><label for="repeatUnit" data-i18n="重复周期">重复周期</label><select id="repeatUnit"><option value="day" data-i18n="天">天</option><option value="week" data-i18n="周">周</option><option value="month" data-i18n="月">月</option></select></div>
+<div class="field"><label for="repeatInterval" data-i18n="重复间隔">重复间隔</label><div class="interval-input"><span data-i18n="每">每</span><input id="repeatInterval" type="number" min="1" max="365" value="1" required disabled/><span id="repeatUnitSuffix" data-i18n="天">天</span></div></div></div>
+<div class="field" id="repeatWeekdayField" hidden><label data-i18n="每周重复星期">每周重复星期</label><div class="weekday-picker" id="repeatWeekdays">
+<label class="weekday-option"><input type="checkbox" value="0" data-weekday/><span data-i18n="周日">日</span></label>
+<label class="weekday-option"><input type="checkbox" value="1" data-weekday/><span data-i18n="周一">一</span></label>
+<label class="weekday-option"><input type="checkbox" value="2" data-weekday/><span data-i18n="周二">二</span></label>
+<label class="weekday-option"><input type="checkbox" value="3" data-weekday/><span data-i18n="周三">三</span></label>
+<label class="weekday-option"><input type="checkbox" value="4" data-weekday/><span data-i18n="周四">四</span></label>
+<label class="weekday-option"><input type="checkbox" value="5" data-weekday/><span data-i18n="周五">五</span></label>
+<label class="weekday-option"><input type="checkbox" value="6" data-weekday/><span data-i18n="周六">六</span></label>
+</div></div>
+<div class="repeat-preview" id="repeatPreview" aria-live="polite"></div>
+<p class="helper" data-i18n="重复日程说明">生成后的每次日程都可独立编辑、勾选完成或删除；修改其中一次不会改变其他日期。</p>
+</div>
+<div class="repeat-edit-note" id="repeatEditNote" hidden data-i18n="当前正在编辑重复日程中的单次任务；修改只影响本次。">这属于一项重复日程，修改只影响当前这一次。</div>
+<div class="completion-row"><div><strong data-i18n="已完成">已完成</strong><span data-i18n="开启后，日历任务会变成灰色并显示完成标记">开启后，日历任务会变灰并出现完成标记</span></div><label aria-label="切换任务完成状态" class="switch"><input id="taskDone" role="switch" type="checkbox"/><span class="switch-slider"></span></label></div>
+<div class="completion-row missed-row"><div><strong data-i18n="未完成">未完成</strong><span data-i18n="标记未完成说明">标记为未完成后留在原日期并显示浅红色；未标记的过期待办自动顺延到今天。</span></div><label class="switch"><input id="taskMissed" role="switch" type="checkbox" aria-label="标记未完成"/><span class="switch-slider"></span></label></div>
+<div class="helper" id="taskRangeHelp">选择日期区间后，日程会在日历中连续显示，跨周和跨月自动延续。</div>
+<div class="modal-actions"><button class="btn danger" data-i18n="删除任务" hidden="" id="deleteTask" type="button">删除任务</button><div class="modal-actions-right"><button class="btn" data-close="taskModalBackdrop" data-i18n="取消" type="button">取消</button><button class="btn primary" data-i18n="保存任务" type="submit">保存任务</button></div></div>
+</form>
+</div>
+</div>
+
+<div class="modal-backdrop" id="excelImportModalBackdrop">
+<div aria-labelledby="excelImportTitle" aria-modal="true" class="modal import-modal" role="dialog">
+<div class="modal-head"><h3 id="excelImportTitle" data-i18n="Excel 日程导入">Excel 日程导入</h3><button class="close-btn" data-close="excelImportModalBackdrop" type="button">×</button></div>
+<div class="field"><p class="helper" data-i18n="Excel导入说明">先下载固定模板，在 Tasks 工作表填写日程。支持普通日程和重复规则；未知分类会自动创建。</p><a class="btn template-download" href="Taskhub_Import_Template.xlsx" download><span>↓</span><span data-i18n="下载 Excel 模板">下载 Excel 模板</span></a></div>
+<div class="field"><label data-i18n="选择 Excel 文件">选择 Excel 文件</label><input accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden id="excelFile" type="file"/><button class="btn" id="chooseExcelFile" type="button" data-i18n="选择 .xlsx 文件">选择 .xlsx 文件</button><span class="selected-file" id="excelFileName"></span></div>
+<div class="import-preview" id="excelImportPreview" hidden><strong id="excelImportSummary"></strong><ul id="excelImportErrors"></ul></div>
+<div class="modal-actions"><button class="btn" data-close="excelImportModalBackdrop" data-i18n="取消" type="button">取消</button><button class="btn primary" id="commitExcelImport" type="button" disabled data-i18n="导入日程">导入日程</button></div>
+</div>
+</div>
+
+<div class="modal-backdrop" id="reminderModalBackdrop">
+<div aria-labelledby="reminderModalTitle" aria-modal="true" class="modal reminder-modal" role="dialog">
+  <div class="modal-head"><h3 id="reminderModalTitle" data-i18n="每日提醒设置">每日提醒设置</h3><button class="close-btn" data-close="reminderModalBackdrop" type="button">×</button></div>
+  <div class="reminder-intro"><span class="reminder-intro-icon">♧</span><div><strong data-i18n="按时提醒今日事项">按时提醒今日事项</strong><p data-i18n="提醒说明">每天可设置多个时间，通知会显示当日待办及尚未完成的过期任务。</p></div></div>
+  <div class="completion-row reminder-switch-row"><div><strong data-i18n="开启桌面通知">开启桌面通知</strong><span data-i18n="仅在你设置的时刻提醒；无待完成事项时不打扰。">仅在你设置的时刻提醒；无待完成事项时不打扰。</span></div><label class="switch"><input id="reminderEnabled" role="switch" type="checkbox" aria-label="开启每日提醒"/><span class="switch-slider"></span></label></div>
+  <div class="field reminder-time-field"><label data-i18n="每天提醒时间">每天提醒时间</label><div class="reminder-time-editor"><input id="reminderTimeInput" type="time" value="09:00" aria-label="选择提醒时间"/><button class="btn primary" id="addReminderTime" type="button" data-i18n="添加时间">＋ 添加时间</button></div><div class="reminder-time-chips" id="reminderTimeChips" aria-live="polite"></div><p class="helper" data-i18n="最多设置12个提醒时刻，点击时间右侧的叉号可删除。">最多设置 12 个提醒时刻，点击时间右侧的 × 可删除。</p></div>
+  <div class="field"><label data-i18n="常用时间">常用时间</label><div class="reminder-presets"><button type="button" class="preset-time" data-time="08:00">＋ 08:00</button><button type="button" class="preset-time" data-time="12:00">＋ 12:00</button><button type="button" class="preset-time" data-time="18:00">＋ 18:00</button><button type="button" class="preset-time" data-time="21:00">＋ 21:00</button></div></div>
+  <div class="reminder-preview"><div class="reminder-preview-title"><strong data-i18n="今日待办预览">今日待办预览</strong><span id="reminderDateLabel"></span></div><div id="reminderTodayPreview" class="reminder-today-list"></div></div>
+  <p class="reminder-status" id="reminderStatus" aria-live="polite"></p>
+  <p class="helper" data-i18n="提醒使用说明">请保持 Edge 运行并允许 Windows 或 macOS 的浏览器通知。电脑休眠、关机或系统勿扰时，通知可能延迟或不显示。</p>
+  <div class="modal-actions"><button type="button" class="btn" id="testReminder" data-i18n="发送测试通知">发送测试通知</button><button type="button" class="btn primary" data-close="reminderModalBackdrop" data-i18n="完成">完成</button></div>
+</div>
+</div>
+<div class="modal-backdrop" id="categoryModalBackdrop">
+<div aria-labelledby="categoryModalTitle" aria-modal="true" class="modal" role="dialog">
+<div class="modal-head"><h3 data-i18n="添加分类" id="categoryModalTitle">添加分类</h3><button class="close-btn" data-close="categoryModalBackdrop">×</button></div>
+<form id="categoryForm">
+<div class="field"><label data-i18n="分类名称" for="categoryName">分类名称</label><input data-i18n-placeholder="例如：雅思备考" id="categoryName" maxlength="24" placeholder="例如：雅思备考" required=""/></div>
+<div class="field"><label data-i18n="标记颜色" id="categoryColorLabel">标记颜色</label>
+<div class="color-palette" id="colorPalette" role="group" aria-labelledby="categoryColorLabel"></div>
+<div class="custom-color-row"><button type="button" class="custom-color-trigger" id="customColorTrigger"><span class="custom-color-dot" id="customColorDot"></span><span data-i18n="自定义颜色">自定义颜色</span><span class="custom-color-hex" id="customColorHex">#7896B8</span></button><input id="categoryColor" type="color" value="#7896b8" aria-label="Custom color"/></div>
+<p class="helper" data-i18n="点击色卡快速选择，或使用调色盘自定义。">点击色卡快速选择，或使用调色盘自定义。</p></div>
+<div class="modal-actions"><button class="btn danger" data-i18n="删除分类" hidden="" id="deleteCategory" type="button">删除分类</button><div class="modal-actions-right"><button class="btn" data-close="categoryModalBackdrop" data-i18n="取消" type="button">取消</button><button class="btn primary" data-i18n="保存分类" type="submit">保存分类</button></div></div>
+</form>
+</div>
+</div>
+<div class="modal-backdrop" id="settingsModalBackdrop">
+<div aria-labelledby="settingsTitle" aria-modal="true" class="modal" role="dialog">
+<div class="modal-head"><h3 data-i18n="Data &amp; Settings · 数据管理" id="settingsTitle">数据与设置</h3><button class="close-btn" data-close="settingsModalBackdrop">×</button></div>
+<div class="field"><strong data-i18n="自动保存已启用">自动保存已启用</strong><p class="helper" data-i18n="任务和分类自动保存在本 Edge 扩展中。正常更新且扩展 ID 不变时，无需迁移。">所有任务和分类自动保存在当前扩展中；使用同一扩展更新无需迁移。</p></div>
+<div class="field"><strong data-i18n="每日提醒">每日提醒</strong><p class="helper" data-i18n="提醒设置入口说明">可设置每天多次的 Edge 桌面提醒，汇总今天及逾期未完成的任务。</p><button class="btn" id="openReminderFromSettings" type="button" data-i18n="设置提醒时间">设置提醒时间</button></div>
+<div class="field"><strong data-i18n="安全备份（可选）">安全备份（可选）</strong><p class="helper" data-i18n="只有更换电脑、卸载扩展或意外丢失数据时，才需要使用备份。">只有更换电脑或重装扩展时，才建议使用备份。</p></div>
+<div class="modal-actions" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn" data-i18n="备份到文件" id="exportData" type="button">备份到文件</button><button class="btn" data-i18n="从备份恢复" id="importData" type="button">从备份恢复</button><input accept=".json,application/json" hidden="" id="importFile" type="file"/></div>
+<p aria-live="polite" class="helper" data-i18n="正在读取存储状态…" id="storageStatus">正在读取存储状态…</p>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script defer="" src="app.js"></script>
+</body>
+</html>
